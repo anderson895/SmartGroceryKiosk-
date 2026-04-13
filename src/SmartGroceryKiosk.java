@@ -32,6 +32,7 @@ public class SmartGroceryKiosk extends JFrame {
     static final String[] CAT_IMAGES = {IMG_FRUITS, IMG_VEGETABLES, IMG_TOOLS, IMG_SNACKS, IMG_DAIRY, IMG_MEAT};
     static Map<String, List<Product>> productsByCategory = new LinkedHashMap<>();
     static List<CartItem> cart = new ArrayList<>();
+    static String selectedDiscountType = "None"; // "None", "Student", "PWD", "Senior Citizen"
 
     // ── Panels ──
     CardLayout cardLayout;
@@ -729,10 +730,71 @@ public class SmartGroceryKiosk extends JFrame {
 
             double subtotal = 0;
             for (CartItem item : cart) subtotal += item.product.price * item.qty;
-            double discount = subtotal >= 200 ? 20.0 : 0.0;
+
+            // ── Discount Type Selector ──
+            gbc.gridy = 4;
+            gbc.weighty = 0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(6, 20, 2, 20);
+            JPanel discountSection = new JPanel();
+            discountSection.setLayout(new BoxLayout(discountSection, BoxLayout.Y_AXIS));
+            discountSection.setOpaque(false);
+
+            JLabel discTypeLabel = new JLabel("Discount Type:");
+            discTypeLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
+            discTypeLabel.setForeground(TEXT_DARK);
+            discTypeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            discountSection.add(discTypeLabel);
+            discountSection.add(Box.createVerticalStrut(4));
+
+            String[] discountOptions = {"None", "Student (10%)", "PWD (20%)", "Senior Citizen (20%)"};
+            String[] discountKeys    = {"None", "Student",       "PWD",       "Senior Citizen"};
+            JPanel discBtnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+            discBtnPanel.setOpaque(false);
+            discBtnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            for (int i = 0; i < discountOptions.length; i++) {
+                final String key = discountKeys[i];
+                final String label = discountOptions[i];
+                JButton btn = new JButton(label) {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        Graphics2D g2 = (Graphics2D) g.create();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        boolean selected = selectedDiscountType.equals(key);
+                        g2.setColor(selected ? PRIMARY_GREEN : new Color(220, 222, 210));
+                        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                        g2.dispose();
+                        super.paintComponent(g);
+                    }
+                };
+                btn.setFont(new Font("SansSerif", Font.PLAIN, 11));
+                btn.setForeground(selectedDiscountType.equals(key) ? Color.WHITE : TEXT_DARK);
+                btn.setBorderPainted(false);
+                btn.setContentAreaFilled(false);
+                btn.setFocusPainted(false);
+                btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                btn.addActionListener(e -> {
+                    selectedDiscountType = key;
+                    showCartScreen();
+                });
+                discBtnPanel.add(btn);
+            }
+            discountSection.add(discBtnPanel);
+            card.add(discountSection, gbc);
+
+            // ── Discount Calculation ──
+            double discountRate = 0.0;
+            switch (selectedDiscountType) {
+                case "Student":        discountRate = 0.10; break;
+                case "PWD":            discountRate = 0.20; break;
+                case "Senior Citizen": discountRate = 0.20; break;
+            }
+            double discount = subtotal * discountRate;
             double total = subtotal - discount;
 
-            gbc.gridy = 4;
+            gbc.gridy = 5;
             gbc.weighty = 0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(8, 25, 5, 25);
@@ -746,7 +808,7 @@ public class SmartGroceryKiosk extends JFrame {
             subtotalBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
             subtotalBtn.setForeground(Color.WHITE);
             if (discount > 0) {
-                JLabel discLabel = new JLabel(String.format("Discount: -\u20B1%.2f", discount));
+                JLabel discLabel = new JLabel(String.format("%s Disc: -\u20B1%.2f", selectedDiscountType, discount));
                 discLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
                 discLabel.setForeground(PRIMARY_GREEN);
                 subtotalInfo.add(discLabel);
@@ -759,7 +821,7 @@ public class SmartGroceryKiosk extends JFrame {
             bottomBar.add(removeBtn, BorderLayout.EAST);
             card.add(bottomBar, gbc);
 
-            gbc.gridy = 5;
+            gbc.gridy = 6;
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = GridBagConstraints.CENTER;
             gbc.insets = new Insets(5, 0, 18, 0);
@@ -1063,9 +1125,16 @@ public class SmartGroceryKiosk extends JFrame {
             addReceiptLine(card, String.format("%-18s x%d   \u20B1%.2f", item.product.name, item.qty, lineTotal));
         }
         card.add(Box.createVerticalStrut(5));
-        double discount = subtotal >= 200 ? 20.0 : 0.0;
+        double discountRate = 0.0;
+        switch (selectedDiscountType) {
+            case "Student":        discountRate = 0.10; break;
+            case "PWD":            discountRate = 0.20; break;
+            case "Senior Citizen": discountRate = 0.20; break;
+        }
+        double discount = subtotal * discountRate;
         addReceiptLine(card, String.format("Subtotal:            \u20B1%.2f", subtotal));
-        if (discount > 0) addReceiptLine(card, String.format("Discount:           -\u20B1%.2f", discount));
+        if (discount > 0) addReceiptLine(card, String.format("%s Disc (%d%%): -\u20B1%.2f",
+            selectedDiscountType, (int)(discountRate * 100), discount));
         card.add(createDashedLine());
         JLabel totalLine = new JLabel(String.format("TOTAL:               \u20B1%.2f", total));
         totalLine.setFont(new Font("Monospaced", Font.BOLD, 13));
@@ -1090,7 +1159,7 @@ public class SmartGroceryKiosk extends JFrame {
         doneBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         doneBtn.setMaximumSize(new Dimension(150, 40));
         doneBtn.setPreferredSize(new Dimension(150, 40));
-        doneBtn.addActionListener(e -> { cart.clear(); showScreen("welcome"); });
+        doneBtn.addActionListener(e -> { cart.clear(); selectedDiscountType = "None"; showScreen("welcome"); });
         card.add(doneBtn);
         card.add(Box.createVerticalStrut(15));
 
