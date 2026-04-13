@@ -42,45 +42,45 @@ public class SmartGroceryKiosk extends JFrame {
 
     static void initProducts() {
         productsByCategory.put("Fruits", Arrays.asList(
-            new Product("Apple", "Fresh red apple, 1kg", 95.00, "Aisle 2"),
-            new Product("Banana", "Lakatan banana, bundle", 65.00, "Aisle 2"),
-            new Product("Mango", "Sweet Philippine mango", 120.00, "Aisle 2"),
-            new Product("Grapes", "Seedless green grapes, 500g", 180.00, "Aisle 2"),
-            new Product("Orange", "Valencia orange, 1kg", 110.00, "Aisle 2")
+            new Product("Apple", "Fresh red apple, 1kg", 95.00, "Aisle 2", "Fruits"),
+            new Product("Banana", "Lakatan banana, bundle", 65.00, "Aisle 2", "Fruits"),
+            new Product("Mango", "Sweet Philippine mango", 120.00, "Aisle 2", "Fruits"),
+            new Product("Grapes", "Seedless green grapes, 500g", 180.00, "Aisle 2", "Fruits"),
+            new Product("Orange", "Valencia orange, 1kg", 110.00, "Aisle 2", "Fruits")
         ));
         productsByCategory.put("Vegetables", Arrays.asList(
-            new Product("Tomato", "Fresh tomatoes, 1kg", 80.00, "Aisle 3"),
-            new Product("Cabbage", "Green cabbage, whole", 55.00, "Aisle 3"),
-            new Product("Carrot", "Fresh carrots, 500g", 60.00, "Aisle 3"),
-            new Product("Onion", "Red onion, 1kg", 90.00, "Aisle 3"),
-            new Product("Potato", "Washed potatoes, 1kg", 75.00, "Aisle 3")
+            new Product("Tomato", "Fresh tomatoes, 1kg", 80.00, "Aisle 3", "Vegetables"),
+            new Product("Cabbage", "Green cabbage, whole", 55.00, "Aisle 3", "Vegetables"),
+            new Product("Carrot", "Fresh carrots, 500g", 60.00, "Aisle 3", "Vegetables"),
+            new Product("Onion", "Red onion, 1kg", 90.00, "Aisle 3", "Vegetables"),
+            new Product("Potato", "Washed potatoes, 1kg", 75.00, "Aisle 3", "Vegetables")
         ));
         productsByCategory.put("Tools", Arrays.asList(
-            new Product("Knife Set", "3-piece kitchen knife set", 350.00, "Aisle 6"),
-            new Product("Cutting Board", "Bamboo cutting board", 220.00, "Aisle 6"),
-            new Product("Peeler", "Stainless steel peeler", 85.00, "Aisle 6"),
-            new Product("Tongs", "Silicone-tip kitchen tongs", 120.00, "Aisle 6")
+            new Product("Knife Set", "3-piece kitchen knife set", 350.00, "Aisle 6", "Tools"),
+            new Product("Cutting Board", "Bamboo cutting board", 220.00, "Aisle 6", "Tools"),
+            new Product("Peeler", "Stainless steel peeler", 85.00, "Aisle 6", "Tools"),
+            new Product("Tongs", "Silicone-tip kitchen tongs", 120.00, "Aisle 6", "Tools")
         ));
         productsByCategory.put("Snacks", Arrays.asList(
-            new Product("Chips", "Potato chips, 150g bag", 65.00, "Aisle 4"),
-            new Product("Crackers", "Cream crackers, 200g", 55.00, "Aisle 4"),
-            new Product("Cookies", "Chocolate chip cookies", 90.00, "Aisle 4"),
-            new Product("Nuts", "Mixed nuts, 250g", 150.00, "Aisle 4"),
-            new Product("Popcorn", "Microwave popcorn, 3-pack", 110.00, "Aisle 4")
+            new Product("Chips", "Potato chips, 150g bag", 65.00, "Aisle 4", "Snacks"),
+            new Product("Crackers", "Cream crackers, 200g", 55.00, "Aisle 4", "Snacks"),
+            new Product("Cookies", "Chocolate chip cookies", 90.00, "Aisle 4", "Snacks"),
+            new Product("Nuts", "Mixed nuts, 250g", 150.00, "Aisle 4", "Snacks"),
+            new Product("Popcorn", "Microwave popcorn, 3-pack", 110.00, "Aisle 4", "Snacks")
         ));
         productsByCategory.put("Dairy", Arrays.asList(
-            new Product("Magnolia", "Fresh milk, 1L", 85.00, "Aisle 1"),
-            new Product("Nestle", "Full cream milk, 1L", 92.00, "Aisle 1"),
-            new Product("Oatside", "Oat milk, barista blend 1L", 165.00, "Aisle 1"),
-            new Product("Cheese", "Cheddar cheese block, 250g", 140.00, "Aisle 1"),
-            new Product("Yogurt", "Greek yogurt, 500g", 125.00, "Aisle 1")
+            new Product("Magnolia", "Fresh milk, 1L", 85.00, "Aisle 1", "Dairy"),
+            new Product("Nestle", "Full cream milk, 1L", 92.00, "Aisle 1", "Dairy"),
+            new Product("Oatside", "Oat milk, barista blend 1L", 165.00, "Aisle 1", "Dairy"),
+            new Product("Cheese", "Cheddar cheese block, 250g", 140.00, "Aisle 1", "Dairy"),
+            new Product("Yogurt", "Greek yogurt, 500g", 125.00, "Aisle 1", "Dairy")
         ));
         productsByCategory.put("Meat", Arrays.asList(
-            new Product("Chicken", "Whole chicken, 1.2kg", 220.00, "Aisle 5"),
-            new Product("Pork Chop", "Pork chop, 500g", 185.00, "Aisle 5"),
-            new Product("Ground Beef", "Lean ground beef, 500g", 250.00, "Aisle 5"),
-            new Product("Hotdog", "Jumbo hotdog, 500g", 130.00, "Aisle 5"),
-            new Product("Bacon", "Smoked bacon, 250g", 175.00, "Aisle 5")
+            new Product("Chicken", "Whole chicken, 1.2kg", 220.00, "Aisle 5", "Meat"),
+            new Product("Pork Chop", "Pork chop, 500g", 185.00, "Aisle 5", "Meat"),
+            new Product("Ground Beef", "Lean ground beef, 500g", 250.00, "Aisle 5", "Meat"),
+            new Product("Hotdog", "Jumbo hotdog, 500g", 130.00, "Aisle 5", "Meat"),
+            new Product("Bacon", "Smoked bacon, 250g", 175.00, "Aisle 5", "Meat")
         ));
     }
 
@@ -177,12 +177,51 @@ public class SmartGroceryKiosk extends JFrame {
         gbc.insets = new Insets(0, 0, 25, 0);
         JPanel bottomIcons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
         bottomIcons.setOpaque(false);
-        JButton cartBtn = makeIconButton("\uD83D\uDED2");
+        // Drawn cart icon button
+        JButton cartBtn = new JButton() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.8f));
+                // Basket body
+                g2.drawRoundRect(cx - 10, cy - 4, 20, 12, 3, 3);
+                // Handle
+                g2.drawArc(cx - 6, cy - 12, 12, 12, 0, 180);
+                g2.dispose();
+            }
+        };
+        cartBtn.setPreferredSize(new Dimension(32, 32));
+        cartBtn.setBorderPainted(false);
+        cartBtn.setContentAreaFilled(false);
+        cartBtn.setFocusPainted(false);
+        cartBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         cartBtn.addActionListener(e -> showCartScreen());
         bottomIcons.add(cartBtn);
-        JLabel locIcon = new JLabel("\uD83D\uDCCD");
-        locIcon.setFont(new Font("SansSerif", Font.PLAIN, 26));
-        locIcon.setForeground(ICON_GREEN);
+        // Drawn location pin
+        JLabel locIcon = new JLabel() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.8f));
+                // Pin body
+                g2.drawOval(cx - 6, cy - 10, 12, 12);
+                // Pin point
+                g2.drawLine(cx - 4, cy, cx, cy + 10);
+                g2.drawLine(cx + 4, cy, cx, cy + 10);
+                // Inner dot
+                g2.fillOval(cx - 2, cy - 6, 4, 4);
+                g2.dispose();
+            }
+        };
+        locIcon.setPreferredSize(new Dimension(32, 32));
         bottomIcons.add(locIcon);
         card.add(bottomIcons, gbc);
 
@@ -533,25 +572,7 @@ public class SmartGroceryKiosk extends JFrame {
         ));
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 85));
 
-        JPanel iconBox = new JPanel(new GridBagLayout()) {
-            private static final long serialVersionUID = 1L;
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(245, 247, 240));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
-                g2.setColor(PALE_GREEN);
-                g2.setStroke(new BasicStroke(1.5f));
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 12, 12);
-            }
-        };
-        iconBox.setOpaque(false);
-        iconBox.setPreferredSize(new Dimension(58, 58));
-        JLabel prodEmoji = new JLabel("\uD83D\uDED2");
-        prodEmoji.setFont(new Font("SansSerif", Font.PLAIN, 22));
-        iconBox.add(prodEmoji);
+        JPanel iconBox = createCategoryIconBox(p.category, 58, 58);
 
         JPanel info = new JPanel();
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
@@ -629,14 +650,37 @@ public class SmartGroceryKiosk extends JFrame {
         JPanel cartHeader = new JPanel();
         cartHeader.setOpaque(false);
         cartHeader.setLayout(new BoxLayout(cartHeader, BoxLayout.Y_AXIS));
-        JLabel cartIcon = new JLabel("\uD83D\uDED2", SwingConstants.CENTER);
-        cartIcon.setFont(new Font("SansSerif", Font.PLAIN, 38));
-        cartIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel cartIconPanel = new JPanel() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(2.5f));
+                // Cart body
+                int[] bx = {cx - 14, cx + 14, cx + 10, cx - 10};
+                int[] by = {cy - 6, cy - 6, cy + 8, cy + 8};
+                g2.drawPolygon(bx, by, 4);
+                // Handle
+                g2.drawLine(cx - 14, cy - 6, cx - 18, cy - 14);
+                // Wheels
+                g2.fillOval(cx - 8, cy + 10, 6, 6);
+                g2.fillOval(cx + 4, cy + 10, 6, 6);
+                g2.dispose();
+            }
+        };
+        cartIconPanel.setOpaque(false);
+        cartIconPanel.setPreferredSize(new Dimension(50, 40));
+        cartIconPanel.setMaximumSize(new Dimension(50, 40));
+        cartIconPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel cartTitle = new JLabel("Your Shopping Cart");
         cartTitle.setFont(new Font("Serif", Font.PLAIN, 22));
         cartTitle.setForeground(TEXT_DARK);
         cartTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cartHeader.add(cartIcon);
+        cartHeader.add(cartIconPanel);
         cartHeader.add(cartTitle);
         card.add(cartHeader, gbc);
 
@@ -726,22 +770,7 @@ public class SmartGroceryKiosk extends JFrame {
         ));
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 85));
 
-        JPanel iconBox = new JPanel(new GridBagLayout()) {
-            private static final long serialVersionUID = 1L;
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(245, 247, 240));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
-            }
-        };
-        iconBox.setOpaque(false);
-        iconBox.setPreferredSize(new Dimension(55, 55));
-        JLabel emoji = new JLabel("\uD83D\uDED2");
-        emoji.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        iconBox.add(emoji);
+        JPanel iconBox = createCategoryIconBox(item.product.category, 55, 55);
 
         JPanel info = new JPanel();
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
@@ -765,14 +794,39 @@ public class SmartGroceryKiosk extends JFrame {
 
         JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         qtyPanel.setOpaque(false);
-        RoundedButton minusBtn = new RoundedButton("\u2212");
+        RoundedButton minusBtn = new RoundedButton("") {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.drawLine(cx - 6, cy, cx + 6, cy);
+                g2.dispose();
+            }
+        };
         minusBtn.setPreferredSize(new Dimension(36, 30));
-        minusBtn.setFont(new Font("SansSerif", Font.BOLD, 16));
         JLabel qtyLabel = new JLabel("  " + item.qty + "  ", SwingConstants.CENTER);
         qtyLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-        RoundedButton plusBtn = new RoundedButton("+");
+        RoundedButton plusBtn = new RoundedButton("") {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.drawLine(cx - 6, cy, cx + 6, cy);
+                g2.drawLine(cx, cy - 6, cx, cy + 6);
+                g2.dispose();
+            }
+        };
         plusBtn.setPreferredSize(new Dimension(36, 30));
-        plusBtn.setFont(new Font("SansSerif", Font.BOLD, 16));
 
         minusBtn.addActionListener(e -> {
             if (item.qty > 1) item.qty--;
@@ -826,9 +880,34 @@ public class SmartGroceryKiosk extends JFrame {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(10, 0, 0, 0);
-        JLabel moneyIcon = new JLabel("\uD83D\uDCB5");
-        moneyIcon.setFont(new Font("SansSerif", Font.PLAIN, 40));
-        card.add(moneyIcon, gbc);
+        JPanel moneyPanel = new JPanel() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(2f));
+                // Bill shape (back)
+                g2.drawRoundRect(cx - 28, cy - 12, 48, 30, 4, 4);
+                // Bill shape (front)
+                g2.setColor(new Color(245, 247, 240));
+                g2.fillRoundRect(cx - 22, cy - 16, 48, 30, 4, 4);
+                g2.setColor(PRIMARY_GREEN);
+                g2.drawRoundRect(cx - 22, cy - 16, 48, 30, 4, 4);
+                // Dollar circle
+                g2.drawOval(cx - 6, cy - 10, 16, 16);
+                // $ sign
+                g2.setFont(new Font("SansSerif", Font.BOLD, 14));
+                g2.drawString("$", cx - 1, cy + 3);
+                g2.dispose();
+            }
+        };
+        moneyPanel.setOpaque(false);
+        moneyPanel.setPreferredSize(new Dimension(80, 50));
+        card.add(moneyPanel, gbc);
 
         gbc.gridy = 3;
         gbc.insets = new Insets(5, 0, 0, 0);
@@ -1056,6 +1135,149 @@ public class SmartGroceryKiosk extends JFrame {
     // ═══════════════════════════════════════════════════════════════
     //  SHARED UI
     // ═══════════════════════════════════════════════════════════════
+
+    JPanel createCategoryIconBox(String category, int w, int h) {
+        JPanel iconBox = new JPanel() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int pw = getWidth(), ph = getHeight();
+                // Background
+                g2.setColor(new Color(245, 247, 240));
+                g2.fillRoundRect(0, 0, pw, ph, 12, 12);
+                g2.setColor(PALE_GREEN);
+                g2.setStroke(new BasicStroke(1.2f));
+                g2.drawRoundRect(0, 0, pw - 1, ph - 1, 12, 12);
+                // Draw icon centered
+                drawCategoryIcon(g2, category, pw, ph);
+                g2.dispose();
+            }
+        };
+        iconBox.setOpaque(false);
+        iconBox.setPreferredSize(new Dimension(w, h));
+        return iconBox;
+    }
+
+    void drawCategoryIcon(Graphics2D g2, String category, int w, int h) {
+        int cx = w / 2, cy = h / 2;
+        g2.setStroke(new BasicStroke(1.5f));
+        switch (category) {
+            case "Dairy":
+                // Milk carton with cow face
+                int bx = cx - 12, by = cy - 14, bw = 24, bh = 30;
+                // Carton body
+                g2.setColor(Color.WHITE);
+                g2.fillRect(bx, by + 8, bw, bh - 8);
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRect(bx, by + 8, bw, bh - 8);
+                // Carton top (triangle roof)
+                int[] tx = {bx, cx, bx + bw};
+                int[] ty = {by + 8, by, by + 8};
+                g2.setColor(Color.WHITE);
+                g2.fillPolygon(tx, ty, 3);
+                g2.setColor(PRIMARY_GREEN);
+                g2.drawPolygon(tx, ty, 3);
+                // Cap on top
+                g2.fillRoundRect(cx - 3, by - 2, 6, 5, 2, 2);
+                // Cow face (simple)
+                g2.setColor(PRIMARY_GREEN);
+                g2.drawOval(cx - 5, by + 14, 10, 8); // head
+                g2.fillOval(cx - 2, by + 18, 2, 2); // left eye
+                g2.fillOval(cx + 1, by + 18, 2, 2); // right eye
+                // MILK text
+                g2.setFont(new Font("SansSerif", Font.BOLD, 7));
+                g2.drawString("MILK", bx + 4, by + 32);
+                break;
+            case "Fruits":
+                // Line-art fruits (apple + leaf)
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawOval(cx - 10, cy - 6, 20, 20); // apple body
+                // Stem
+                g2.setStroke(new BasicStroke(2f));
+                g2.drawLine(cx, cy - 6, cx + 2, cy - 13);
+                // Leaf
+                g2.drawOval(cx + 1, cy - 15, 8, 5);
+                // Small highlight arc
+                g2.setStroke(new BasicStroke(1f));
+                g2.drawArc(cx - 5, cy - 2, 8, 10, 40, 80);
+                break;
+            case "Vegetables":
+                // Line-art carrot
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                int[] crx = {cx - 7, cx + 7, cx};
+                int[] cry = {cy - 6, cy - 6, cy + 14};
+                g2.drawPolygon(crx, cry, 3);
+                // Horizontal lines on carrot
+                g2.drawLine(cx - 4, cy, cx + 4, cy);
+                g2.drawLine(cx - 3, cy + 4, cx + 3, cy + 4);
+                // Leaves
+                g2.setStroke(new BasicStroke(1.8f));
+                g2.drawLine(cx, cy - 6, cx - 6, cy - 16);
+                g2.drawLine(cx, cy - 6, cx, cy - 18);
+                g2.drawLine(cx, cy - 6, cx + 6, cy - 16);
+                break;
+            case "Snacks":
+                // Line-art bowl with chips
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                // Bowl
+                g2.drawArc(cx - 14, cy - 2, 28, 20, 0, -180);
+                g2.drawLine(cx - 14, cy - 2, cx + 14, cy - 2);
+                // Chips sticking out
+                int[] c1x = {cx - 8, cx - 4, cx - 2};
+                int[] c1y = {cy - 2, cy - 14, cy - 2};
+                g2.drawPolygon(c1x, c1y, 3);
+                int[] c2x = {cx - 2, cx + 2, cx + 4};
+                int[] c2y = {cy - 2, cy - 16, cy - 2};
+                g2.drawPolygon(c2x, c2y, 3);
+                int[] c3x = {cx + 4, cx + 8, cx + 10};
+                int[] c3y = {cy - 2, cy - 12, cy - 2};
+                g2.drawPolygon(c3x, c3y, 3);
+                break;
+            case "Meat":
+                // Line-art steak
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawOval(cx - 14, cy - 8, 28, 18);
+                // Marbling lines
+                g2.setStroke(new BasicStroke(1f));
+                g2.drawArc(cx - 6, cy - 4, 14, 10, 20, 140);
+                g2.drawArc(cx - 4, cy - 2, 8, 6, 200, 140);
+                // Bone circle
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawOval(cx + 8, cy - 4, 6, 6);
+                break;
+            case "Tools":
+                // Line-art cutting board + knife
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                // Cutting board
+                g2.drawRoundRect(cx - 6, cy - 14, 16, 26, 4, 4);
+                g2.drawOval(cx + 2, cy - 12, 4, 4); // hole
+                // Knife
+                g2.drawLine(cx - 12, cy - 8, cx - 12, cy + 10);
+                g2.drawLine(cx - 12, cy + 10, cx - 8, cy + 10);
+                g2.drawLine(cx - 8, cy + 10, cx - 8, cy - 4);
+                g2.drawLine(cx - 8, cy - 4, cx - 12, cy - 8);
+                // Knife handle
+                g2.drawRect(cx - 13, cy - 14, 6, 6);
+                break;
+            default:
+                // Line-art shopping bag
+                g2.setColor(PRIMARY_GREEN);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(cx - 10, cy - 4, 20, 18, 4, 4);
+                g2.drawArc(cx - 6, cy - 12, 12, 12, 0, 180);
+                break;
+        }
+    }
+
     JPanel createTopBar() {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setOpaque(false);
@@ -1095,9 +1317,26 @@ public class SmartGroceryKiosk extends JFrame {
     }
 
     RoundedButton makeBackButton(String target) {
-        RoundedButton btn = new RoundedButton("<");
-        btn.setPreferredSize(new Dimension(42, 36));
-        btn.setFont(new Font("SansSerif", Font.BOLD, 18));
+        RoundedButton btn = new RoundedButton("") {
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int d = Math.min(getWidth(), getHeight()) - 2;
+                int ox = (getWidth() - d) / 2, oy = (getHeight() - d) / 2;
+                g2.setColor(PRIMARY_GREEN);
+                g2.fillOval(ox, oy, d, d);
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                int cx = getWidth() / 2, cy = getHeight() / 2;
+                g2.drawLine(cx + 5, cy, cx - 5, cy);
+                g2.drawLine(cx - 5, cy, cx, cy - 5);
+                g2.drawLine(cx - 5, cy, cx, cy + 5);
+                g2.dispose();
+            }
+        };
+        btn.setPreferredSize(new Dimension(38, 38));
         if (target.equals("cart_screen_back")) {
             btn.addActionListener(e -> showCartScreen());
         } else {
@@ -1177,9 +1416,9 @@ public class SmartGroceryKiosk extends JFrame {
     //  DATA MODELS
     // ═══════════════════════════════════════════════════════════════
     static class Product {
-        String name, description, aisle;
+        String name, description, aisle, category;
         double price;
-        Product(String n, String d, double p, String a) { name = n; description = d; price = p; aisle = a; }
+        Product(String n, String d, double p, String a, String cat) { name = n; description = d; price = p; aisle = a; category = cat; }
     }
 
     static class CartItem {
