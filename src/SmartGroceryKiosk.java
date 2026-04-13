@@ -919,10 +919,12 @@ public class SmartGroceryKiosk extends JFrame {
             if (panelName.equals(c.getName())) { mainPanel.remove(c); break; }
         }
 
-        RoundedPanel card = new RoundedPanel(25);
+        // Use a regular JPanel for the inner content to avoid rendering issues
+        JPanel card = new JPanel();
         card.setBackground(CARD_WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createEmptyBorder(20, 35, 25, 35));
+        card.setOpaque(true);
 
         JPanel dotsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         dotsRow.setOpaque(false);
@@ -996,19 +998,31 @@ public class SmartGroceryKiosk extends JFrame {
         doneBtn.setPreferredSize(new Dimension(150, 40));
         doneBtn.addActionListener(e -> { cart.clear(); showScreen("welcome"); });
         card.add(doneBtn);
-        card.add(Box.createVerticalGlue());
+        card.add(Box.createVerticalStrut(15));
 
-        JScrollPane scroll = new JScrollPane(card);
-        scroll.setBorder(null);
-        scroll.setOpaque(false);
-        scroll.getViewport().setOpaque(false);
-        JPanel outer = new JPanel(new BorderLayout());
+        // No scroll needed - receipt is compact. Center it in the window.
+        JPanel outer = new JPanel(new GridBagLayout());
         outer.setName(panelName);
         outer.setBackground(BG_GRAY);
-        outer.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
-        outer.add(scroll, BorderLayout.CENTER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+
+        // Wrap card in RoundedPanel for rounded look
+        RoundedPanel wrapper = new RoundedPanel(25);
+        wrapper.setBackground(CARD_WHITE);
+        wrapper.setLayout(new BorderLayout());
+        wrapper.add(card, BorderLayout.CENTER);
+
+        outer.add(wrapper, gbc);
         mainPanel.add(outer, panelName);
         cardLayout.show(mainPanel, panelName);
+
+        outer.revalidate();
+        outer.repaint();
     }
 
     void addReceiptLine(JPanel panel, String text) {
