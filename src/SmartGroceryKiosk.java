@@ -533,9 +533,18 @@ public class SmartGroceryKiosk extends JFrame {
         JPanel catHeader = new JPanel();
         catHeader.setOpaque(false);
         catHeader.setLayout(new BoxLayout(catHeader, BoxLayout.Y_AXIS));
-        JLabel catIcon = new JLabel(CAT_EMOJI[catIdx], SwingConstants.CENTER);
-        catIcon.setFont(new Font("SansSerif", Font.PLAIN, 34));
+        JLabel catIcon = new JLabel();
+        catIcon.setHorizontalAlignment(SwingConstants.CENTER);
         catIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
+        try {
+            byte[] imgBytes = java.util.Base64.getDecoder().decode(CAT_IMAGES[catIdx]);
+            java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(imgBytes));
+            if (img != null) {
+                java.awt.Image scaled = img.getScaledInstance(80, 80, java.awt.Image.SCALE_SMOOTH);
+                catIcon.setIcon(new ImageIcon(scaled));
+            }
+        } catch (Exception ex) { /* fallback: no icon */ }
+        catIcon.setPreferredSize(new Dimension(90, 90));
         JLabel catName = new JLabel(category, SwingConstants.CENTER);
         catName.setFont(new Font("Serif", Font.PLAIN, 24));
         catName.setForeground(TEXT_DARK);
@@ -1143,7 +1152,7 @@ public class SmartGroceryKiosk extends JFrame {
     // ═══════════════════════════════════════════════════════════════
 
     JPanel createCategoryIconBox(String category, int w, int h) {
-        JPanel iconBox = new JPanel() {
+        JPanel iconBox = new JPanel(new GridBagLayout()) {
             private static final long serialVersionUID = 1L;
             @Override
             protected void paintComponent(Graphics g) {
@@ -1151,19 +1160,31 @@ public class SmartGroceryKiosk extends JFrame {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int pw = getWidth(), ph = getHeight();
-                // Background
                 g2.setColor(new Color(245, 247, 240));
                 g2.fillRoundRect(0, 0, pw, ph, 12, 12);
                 g2.setColor(PALE_GREEN);
                 g2.setStroke(new BasicStroke(1.2f));
                 g2.drawRoundRect(0, 0, pw - 1, ph - 1, 12, 12);
-                // Draw icon centered
-                drawCategoryIcon(g2, category, pw, ph);
                 g2.dispose();
             }
         };
         iconBox.setOpaque(false);
         iconBox.setPreferredSize(new Dimension(w, h));
+
+        int catIdx = Arrays.asList(CATEGORIES).indexOf(category);
+        JLabel imgLabel = new JLabel();
+        if (catIdx >= 0) {
+            try {
+                byte[] imgBytes = java.util.Base64.getDecoder().decode(CAT_IMAGES[catIdx]);
+                java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(imgBytes));
+                if (img != null) {
+                    int size = Math.min(w, h) - 10;
+                    java.awt.Image scaled = img.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH);
+                    imgLabel.setIcon(new ImageIcon(scaled));
+                }
+            } catch (Exception ex) { /* fallback: empty */ }
+        }
+        iconBox.add(imgLabel);
         return iconBox;
     }
 
