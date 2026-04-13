@@ -743,8 +743,8 @@ public class SmartGroceryKiosk extends JFrame {
             subtotalInfo.setOpaque(false);
             RoundedButton subtotalBtn = new RoundedButton(String.format("Subtotal: \u20B1%.2f", subtotal));
             subtotalBtn.setPreferredSize(new Dimension(170, 32));
-            subtotalBtn.setEnabled(false);
             subtotalBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
+            subtotalBtn.setForeground(Color.WHITE);
             if (discount > 0) {
                 JLabel discLabel = new JLabel(String.format("Discount: -\u20B1%.2f", discount));
                 discLabel.setFont(new Font("SansSerif", Font.PLAIN, 11));
