@@ -33,6 +33,8 @@ public class SmartGroceryKiosk extends JFrame {
     static Map<String, List<Product>> productsByCategory = new LinkedHashMap<>();
     static List<CartItem> cart = new ArrayList<>();
     static String selectedDiscountType = "None"; // "None", "Student", "PWD", "Senior Citizen"
+    static String selectedPaymentMethod = "QR Code / GCash";
+    static double cashGiven = 0.0;
 
     // ── Panels ──
     CardLayout cardLayout;
@@ -174,11 +176,18 @@ public class SmartGroceryKiosk extends JFrame {
         }
 
         gbc.gridy = 7;
+        gbc.insets = new Insets(12, 40, 0, 40);
+        RoundedButton salesReportBtn = new RoundedButton("DAILY SALES REPORT");
+        salesReportBtn.setPreferredSize(new Dimension(280, 48));
+        salesReportBtn.addActionListener(e -> showDailySalesReport());
+        card.add(salesReportBtn, gbc);
+
+        gbc.gridy = 9;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         card.add(Box.createGlue(), gbc);
 
-        gbc.gridy = 8;
+        gbc.gridy = 10;
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -931,6 +940,9 @@ public class SmartGroceryKiosk extends JFrame {
     //  PAYMENT
     // ═══════════════════════════════════════════════════════════════
     void showPaymentScreen(double total) {
+        selectedPaymentMethod = "QR Code / GCash";
+        cashGiven = 0.0;
+
         String panelName = "payment";
         for (Component c : mainPanel.getComponents()) {
             if (panelName.equals(c.getName())) { mainPanel.remove(c); break; }
@@ -957,52 +969,42 @@ public class SmartGroceryKiosk extends JFrame {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(10, 0, 0, 0);
-        JPanel moneyPanel = new JPanel() {
-            private static final long serialVersionUID = 1L;
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                int cx = getWidth() / 2, cy = getHeight() / 2;
-                g2.setColor(PRIMARY_GREEN);
-                g2.setStroke(new BasicStroke(2f));
-                // Bill shape (back)
-                g2.drawRoundRect(cx - 28, cy - 12, 48, 30, 4, 4);
-                // Bill shape (front)
-                g2.setColor(new Color(245, 247, 240));
-                g2.fillRoundRect(cx - 22, cy - 16, 48, 30, 4, 4);
-                g2.setColor(PRIMARY_GREEN);
-                g2.drawRoundRect(cx - 22, cy - 16, 48, 30, 4, 4);
-                // Dollar circle
-                g2.drawOval(cx - 6, cy - 10, 16, 16);
-                // $ sign
-                g2.setFont(new Font("SansSerif", Font.BOLD, 14));
-                g2.drawString("$", cx - 1, cy + 3);
-                g2.dispose();
-            }
-        };
-        moneyPanel.setOpaque(false);
-        moneyPanel.setPreferredSize(new Dimension(80, 50));
-        card.add(moneyPanel, gbc);
-
-        gbc.gridy = 3;
-        gbc.insets = new Insets(5, 0, 0, 0);
         JLabel payTitle = new JLabel("COMPLETE PAYMENT");
         payTitle.setFont(new Font("Serif", Font.BOLD, 22));
         payTitle.setForeground(TEXT_DARK);
         card.add(payTitle, gbc);
 
-        gbc.gridy = 4;
-        gbc.insets = new Insets(5, 0, 10, 0);
+        gbc.gridy = 3;
+        gbc.insets = new Insets(4, 0, 8, 0);
         JLabel totalLabel = new JLabel(String.format("Total: \u20B1%.2f", total));
         totalLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
         totalLabel.setForeground(PRIMARY_GREEN);
         card.add(totalLabel, gbc);
 
+        // ── Payment method toggle buttons ──
+        gbc.gridy = 4;
+        gbc.insets = new Insets(4, 30, 8, 30);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel methodPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        methodPanel.setOpaque(false);
+
+        RoundedButton qrMethodBtn = new RoundedButton("QR Code / GCash");
+        RoundedButton cashMethodBtn = new RoundedButton("Cash");
+        // highlight initial selection
+        qrMethodBtn.setBackground(PRIMARY_GREEN);
+        cashMethodBtn.setBackground(LIGHT_GREEN);
+        methodPanel.add(qrMethodBtn);
+        methodPanel.add(cashMethodBtn);
+        card.add(methodPanel, gbc);
+
+        // ── QR section ──
         gbc.gridy = 5;
-        gbc.insets = new Insets(10, 0, 15, 0);
-        JPanel qrPanel = new JPanel() {
+        gbc.insets = new Insets(6, 0, 10, 0);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JPanel qrSection = new JPanel(new BorderLayout());
+        qrSection.setOpaque(false);
+        JPanel qrCanvas = new JPanel() {
             private static final long serialVersionUID = 1L;
             @Override
             protected void paintComponent(Graphics g) {
@@ -1010,15 +1012,102 @@ public class SmartGroceryKiosk extends JFrame {
                 drawQRCode((Graphics2D) g, getWidth(), getHeight());
             }
         };
-        qrPanel.setOpaque(false);
-        qrPanel.setPreferredSize(new Dimension(200, 200));
-        card.add(qrPanel, gbc);
+        qrCanvas.setOpaque(false);
+        qrCanvas.setPreferredSize(new Dimension(180, 180));
+        JLabel qrHint = new JLabel("Scan with GCash / any QR app", SwingConstants.CENTER);
+        qrHint.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        qrHint.setForeground(TEXT_MEDIUM);
+        qrSection.add(qrCanvas, BorderLayout.CENTER);
+        qrSection.add(qrHint, BorderLayout.SOUTH);
+        card.add(qrSection, gbc);
+
+        // ── Cash section (hidden initially) ──
+        JPanel cashSection = new JPanel();
+        cashSection.setOpaque(false);
+        cashSection.setLayout(new BoxLayout(cashSection, BoxLayout.Y_AXIS));
+        cashSection.setVisible(false);
+
+        JLabel cashInstrLabel = new JLabel("Enter cash amount:");
+        cashInstrLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
+        cashInstrLabel.setForeground(TEXT_DARK);
+        cashInstrLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextField cashField = new JTextField(10);
+        cashField.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        cashField.setHorizontalAlignment(JTextField.CENTER);
+        cashField.setMaximumSize(new Dimension(180, 36));
+        cashField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel changeLabel = new JLabel(" ");
+        changeLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+        changeLabel.setForeground(PRIMARY_GREEN);
+        changeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        cashField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            void update() {
+                try {
+                    double entered = Double.parseDouble(cashField.getText().trim());
+                    if (entered >= total) {
+                        changeLabel.setText(String.format("Change: \u20B1%.2f", entered - total));
+                        changeLabel.setForeground(PRIMARY_GREEN);
+                    } else {
+                        changeLabel.setText("Amount is less than total");
+                        changeLabel.setForeground(Color.RED);
+                    }
+                } catch (NumberFormatException ex) {
+                    changeLabel.setText(" ");
+                }
+            }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { update(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { update(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { update(); }
+        });
+
+        cashSection.add(cashInstrLabel);
+        cashSection.add(Box.createVerticalStrut(8));
+        cashSection.add(cashField);
+        cashSection.add(Box.createVerticalStrut(8));
+        cashSection.add(changeLabel);
+
+        // Add cashSection at same grid position (swap visibility)
+        card.add(cashSection, gbc);
+
+        // ── Toggle logic ──
+        qrMethodBtn.addActionListener(e -> {
+            selectedPaymentMethod = "QR Code / GCash";
+            qrSection.setVisible(true);
+            cashSection.setVisible(false);
+            card.revalidate();
+            card.repaint();
+        });
+        cashMethodBtn.addActionListener(e -> {
+            selectedPaymentMethod = "Cash";
+            qrSection.setVisible(false);
+            cashSection.setVisible(true);
+            card.revalidate();
+            card.repaint();
+        });
 
         gbc.gridy = 6;
-        gbc.insets = new Insets(5, 0, 0, 0);
+        gbc.insets = new Insets(8, 0, 0, 0);
         RoundedButton receiptBtn = new RoundedButton("Generate Receipt");
         receiptBtn.setPreferredSize(new Dimension(220, 42));
-        receiptBtn.addActionListener(e -> showReceiptScreen(total));
+        receiptBtn.addActionListener(e -> {
+            if (selectedPaymentMethod.equals("Cash")) {
+                try {
+                    double entered = Double.parseDouble(cashField.getText().trim());
+                    if (entered < total) {
+                        JOptionPane.showMessageDialog(this, "Cash amount is less than the total.", "Insufficient Cash", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    cashGiven = entered;
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid cash amount.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+            showReceiptScreen(total);
+        });
         card.add(receiptBtn, gbc);
 
         gbc.gridy = 7;
@@ -1144,7 +1233,11 @@ public class SmartGroceryKiosk extends JFrame {
         card.add(Box.createVerticalStrut(5));
         card.add(createDashedLine());
         card.add(Box.createVerticalStrut(5));
-        addReceiptLine(card, "Payment Method:  QR Code");
+        addReceiptLine(card, "Payment Method:  " + selectedPaymentMethod);
+        if (selectedPaymentMethod.equals("Cash")) {
+            addReceiptLine(card, String.format("Cash Given:      \u20B1%.2f", cashGiven));
+            addReceiptLine(card, String.format("Change:          \u20B1%.2f", cashGiven - total));
+        }
         addReceiptLine(card, "Status:  PAID");
         card.add(Box.createVerticalStrut(10));
         JLabel thanks = new JLabel("Thank you for shopping!");
@@ -1159,7 +1252,7 @@ public class SmartGroceryKiosk extends JFrame {
         doneBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         doneBtn.setMaximumSize(new Dimension(150, 40));
         doneBtn.setPreferredSize(new Dimension(150, 40));
-        doneBtn.addActionListener(e -> { cart.clear(); selectedDiscountType = "None"; showScreen("welcome"); });
+        doneBtn.addActionListener(e -> { cart.clear(); selectedDiscountType = "None"; selectedPaymentMethod = "QR Code / GCash"; cashGiven = 0.0; showScreen("welcome"); });
         card.add(doneBtn);
         card.add(Box.createVerticalStrut(15));
 
@@ -1184,6 +1277,316 @@ public class SmartGroceryKiosk extends JFrame {
         mainPanel.add(outer, panelName);
         cardLayout.show(mainPanel, panelName);
 
+        outer.revalidate();
+        outer.repaint();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  DAILY SALES REPORT
+    // ═══════════════════════════════════════════════════════════════
+    void showDailySalesReport() {
+        String panelName = "daily_sales";
+        for (Component c : mainPanel.getComponents()) {
+            if (panelName.equals(c.getName())) { mainPanel.remove(c); break; }
+        }
+
+        // ── Static data ──
+        String[] catNames  = {"Fruits", "Vegetables", "Dairy", "Snacks", "Meat", "Tools"};
+        int[]    catQty    = {24, 18, 15, 31, 12, 7};
+        double[] catRev    = {2580.00, 1260.00, 2035.00, 2145.00, 2820.00, 2170.00};
+        Color[]  dotColors = {
+            new Color(231, 76, 60),   new Color(39, 174, 96),
+            new Color(52, 152, 219),  new Color(230, 126, 34),
+            new Color(155, 89, 182),  new Color(127, 140, 141),
+        };
+
+        double grandTotal = 0; int totalQty = 0; double maxRev = 0;
+        for (int i = 0; i < catRev.length; i++) {
+            grandTotal += catRev[i]; totalQty += catQty[i];
+            if (catRev[i] > maxRev) maxRev = catRev[i];
+        }
+        final double gTotal = grandTotal;
+        final double mRev   = maxRev;
+
+        // ── Root panel inside scroll ──
+        JPanel content = new JPanel(new GridBagLayout());
+        content.setBackground(BG_GRAY);
+
+        GridBagConstraints cc = new GridBagConstraints();
+        cc.gridx = 0; cc.fill = GridBagConstraints.HORIZONTAL;
+        cc.weightx = 1.0; cc.insets = new Insets(0, 0, 0, 0);
+
+        // ── Header ──
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(PRIMARY_GREEN);
+        header.setBorder(BorderFactory.createEmptyBorder(16, 20, 16, 20));
+
+        JPanel hLeft = new JPanel(new GridLayout(2, 1, 0, 3));
+        hLeft.setOpaque(false);
+        JLabel hTitle = new JLabel("Daily Sales Report");
+        hTitle.setFont(new Font("Serif", Font.BOLD, 20));
+        hTitle.setForeground(Color.WHITE);
+        JLabel hSub = new JLabel("JAVA.R Smart Grocery");
+        hSub.setFont(new Font("SansSerif", Font.PLAIN, 11));
+        hSub.setForeground(new Color(215, 222, 195));
+        hLeft.add(hTitle); hLeft.add(hSub);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+        JLabel hDate = new JLabel(sdf.format(new Date()), SwingConstants.RIGHT);
+        hDate.setFont(new Font("SansSerif", Font.BOLD, 12));
+        hDate.setForeground(Color.WHITE);
+
+        header.add(hLeft, BorderLayout.WEST);
+        header.add(hDate, BorderLayout.EAST);
+
+        cc.gridy = 0; cc.insets = new Insets(0, 0, 0, 0);
+        content.add(header, cc);
+
+        // ── Back button row ──
+        JPanel backRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 10));
+        backRow.setBackground(BG_GRAY);
+        RoundedButton backBtn = new RoundedButton("\u2190  Back to Menu");
+        backBtn.setPreferredSize(new Dimension(150, 34));
+        backBtn.addActionListener(e -> showScreen("welcome"));
+        backRow.add(backBtn);
+        cc.gridy = 1; cc.insets = new Insets(0, 0, 0, 0);
+        content.add(backRow, cc);
+
+        // ── Stat cards ──
+        JPanel statsRow = new JPanel(new GridLayout(1, 3, 10, 0));
+        statsRow.setBackground(BG_GRAY);
+        statsRow.setBorder(BorderFactory.createEmptyBorder(0, 16, 0, 16));
+        String[] statVals  = {String.format("\u20B1%,.0f", gTotal), String.valueOf(totalQty), "107"};
+        String[] statLbls  = {"Total Revenue", "Items Sold", "Transactions"};
+        Color[]  statCols  = {PRIMARY_GREEN, LIGHT_GREEN, new Color(160, 170, 130)};
+        for (int i = 0; i < 3; i++) {
+            final Color col = statCols[i];
+            final String sv = statVals[i], sl = statLbls[i];
+            JPanel card = new JPanel(new GridBagLayout()) {
+                @Override protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(new Color(0,0,0,20));
+                    g2.fillRoundRect(3,3,getWidth()-3,getHeight()-3,14,14);
+                    g2.setColor(col);
+                    g2.fillRoundRect(0,0,getWidth()-3,getHeight()-3,14,14);
+                    g2.dispose();
+                }
+            };
+            card.setOpaque(false);
+            card.setPreferredSize(new Dimension(0, 72));
+            JPanel inner = new JPanel(new GridLayout(2, 1, 0, 4));
+            inner.setOpaque(false);
+            JLabel vLbl = new JLabel(sv, SwingConstants.CENTER);
+            vLbl.setFont(new Font("SansSerif", Font.BOLD, 16));
+            vLbl.setForeground(Color.WHITE);
+            JLabel nLbl = new JLabel(sl, SwingConstants.CENTER);
+            nLbl.setFont(new Font("SansSerif", Font.PLAIN, 10));
+            nLbl.setForeground(new Color(230, 238, 215));
+            inner.add(vLbl); inner.add(nLbl);
+            card.add(inner);
+            statsRow.add(card);
+        }
+        cc.gridy = 2; cc.insets = new Insets(0, 0, 10, 0);
+        content.add(statsRow, cc);
+
+        // ── Sales by Category card ──
+        JPanel tCard = new JPanel();
+        tCard.setBackground(CARD_WHITE);
+        tCard.setLayout(new BoxLayout(tCard, BoxLayout.Y_AXIS));
+        tCard.setBorder(BorderFactory.createEmptyBorder(14, 16, 14, 16));
+
+        JLabel tTitle = new JLabel("Sales by Category");
+        tTitle.setFont(new Font("SansSerif", Font.BOLD, 13));
+        tTitle.setForeground(TEXT_DARK);
+        tTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        tCard.add(tTitle);
+        tCard.add(Box.createVerticalStrut(10));
+
+        // Column header row
+        JPanel colHdr = new JPanel(new GridLayout(1, 4, 0, 0));
+        colHdr.setOpaque(false);
+        colHdr.setMaximumSize(new Dimension(Short.MAX_VALUE, 18));
+        String[] cols = {"Category", "Qty", "Revenue", "Share"};
+        int[] aligns = {SwingConstants.LEFT, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.LEFT};
+        for (int c = 0; c < cols.length; c++) {
+            JLabel h = new JLabel(cols[c], aligns[c]);
+            h.setFont(new Font("SansSerif", Font.BOLD, 10));
+            h.setForeground(TEXT_MEDIUM);
+            if (c == 3) h.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+            colHdr.add(h);
+        }
+        colHdr.setAlignmentX(Component.LEFT_ALIGNMENT);
+        tCard.add(colHdr);
+
+        JSeparator s1 = new JSeparator();
+        s1.setForeground(PALE_GREEN); s1.setMaximumSize(new Dimension(Short.MAX_VALUE, 1));
+        s1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        tCard.add(Box.createVerticalStrut(4)); tCard.add(s1); tCard.add(Box.createVerticalStrut(2));
+
+        Color[] stripeBg = {CARD_WHITE, new Color(247, 249, 243)};
+        for (int i = 0; i < catNames.length; i++) {
+            final Color dot = dotColors[i];
+            final double rev = catRev[i];
+            final double frac = rev / mRev;
+            final double pct = rev / gTotal * 100;
+            final Color bg = stripeBg[i % 2];
+
+            JPanel row = new JPanel(new GridLayout(1, 4, 0, 0)) {
+                @Override protected void paintComponent(Graphics g) {
+                    g.setColor(bg); g.fillRect(0,0,getWidth(),getHeight());
+                }
+            };
+            row.setOpaque(false);
+            row.setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
+            row.setMaximumSize(new Dimension(Short.MAX_VALUE, 32));
+            row.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            // Cat cell with dot
+            JPanel catCell = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            catCell.setOpaque(false);
+            JPanel dotPan = new JPanel() {
+                @Override protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(dot);
+                    g2.fillOval(1, (getHeight()-9)/2, 9, 9);
+                    g2.dispose();
+                }
+            };
+            dotPan.setOpaque(false); dotPan.setPreferredSize(new Dimension(12, 16));
+            JLabel catLbl = new JLabel(catNames[i]);
+            catLbl.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            catLbl.setForeground(TEXT_DARK);
+            catCell.add(dotPan); catCell.add(catLbl);
+            row.add(catCell);
+
+            JLabel qLbl = new JLabel(String.valueOf(catQty[i]), SwingConstants.RIGHT);
+            qLbl.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            qLbl.setForeground(TEXT_DARK);
+            row.add(qLbl);
+
+            JLabel rLbl = new JLabel(String.format("\u20B1%,.2f", rev), SwingConstants.RIGHT);
+            rLbl.setFont(new Font("SansSerif", Font.BOLD, 12));
+            rLbl.setForeground(PRIMARY_GREEN);
+            row.add(rLbl);
+
+            // Bar + pct
+            JPanel barCell = new JPanel(new BorderLayout(6, 0));
+            barCell.setOpaque(false);
+            barCell.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+            JPanel bar = new JPanel() {
+                @Override protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    int bw = (int)(getWidth() * frac);
+                    g2.setColor(PALE_GREEN);
+                    g2.fillRoundRect(0,0,getWidth(),getHeight(),6,6);
+                    if (bw > 0) { g2.setColor(PRIMARY_GREEN); g2.fillRoundRect(0,0,bw,getHeight(),6,6); }
+                    g2.dispose();
+                }
+            };
+            bar.setOpaque(false);
+            bar.setPreferredSize(new Dimension(0, 10));
+            JLabel pctLbl = new JLabel(String.format("%.0f%%", pct));
+            pctLbl.setFont(new Font("SansSerif", Font.PLAIN, 10));
+            pctLbl.setForeground(TEXT_MEDIUM);
+            pctLbl.setPreferredSize(new Dimension(30, 14));
+            barCell.add(bar, BorderLayout.CENTER);
+            barCell.add(pctLbl, BorderLayout.EAST);
+            row.add(barCell);
+
+            tCard.add(row);
+        }
+
+        tCard.add(Box.createVerticalStrut(6));
+        JSeparator s2 = new JSeparator();
+        s2.setForeground(PALE_GREEN); s2.setMaximumSize(new Dimension(Short.MAX_VALUE, 1));
+        s2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        tCard.add(s2); tCard.add(Box.createVerticalStrut(6));
+
+        JLabel grandLbl = new JLabel(String.format("Grand Total:   \u20B1%,.2f", grandTotal), SwingConstants.RIGHT);
+        grandLbl.setFont(new Font("SansSerif", Font.BOLD, 13));
+        grandLbl.setForeground(PRIMARY_GREEN);
+        grandLbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        grandLbl.setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
+        tCard.add(grandLbl);
+
+        JPanel tWrap = new JPanel(new BorderLayout());
+        tWrap.setBackground(BG_GRAY);
+        tWrap.setBorder(BorderFactory.createEmptyBorder(0, 16, 10, 16));
+        tWrap.add(tCard, BorderLayout.CENTER);
+        cc.gridy = 3; cc.insets = new Insets(0, 0, 0, 0);
+        content.add(tWrap, cc);
+
+        // ── Transaction Summary card ──
+        JPanel txCard = new JPanel();
+        txCard.setBackground(CARD_WHITE);
+        txCard.setLayout(new BoxLayout(txCard, BoxLayout.Y_AXIS));
+        txCard.setBorder(BorderFactory.createEmptyBorder(14, 16, 14, 16));
+
+        JLabel txTitle = new JLabel("Transaction Summary");
+        txTitle.setFont(new Font("SansSerif", Font.BOLD, 13));
+        txTitle.setForeground(TEXT_DARK);
+        txTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        txCard.add(txTitle);
+        txCard.add(Box.createVerticalStrut(8));
+
+        String[][] txData = {
+            {"Total Transactions", "107"},
+            {"Cash Payments",       "63"},
+            {"QR Code / GCash",     "44"},
+            {"Discounts Applied",   "12"},
+            {"Best Seller",         "Chips (31 sold)"},
+        };
+        for (int i = 0; i < txData.length; i++) {
+            final Color bg = (i % 2 == 1) ? new Color(247, 249, 243) : CARD_WHITE;
+            JPanel txRow = new JPanel(new BorderLayout()) {
+                @Override protected void paintComponent(Graphics g) {
+                    g.setColor(bg); g.fillRect(0,0,getWidth(),getHeight());
+                }
+            };
+            txRow.setOpaque(false);
+            txRow.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+            txRow.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+            txRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            JLabel kLbl = new JLabel(txData[i][0]);
+            kLbl.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            kLbl.setForeground(TEXT_MEDIUM);
+            JLabel vLbl = new JLabel(txData[i][1], SwingConstants.RIGHT);
+            vLbl.setFont(new Font("SansSerif", Font.BOLD, 12));
+            vLbl.setForeground(TEXT_DARK);
+            txRow.add(kLbl, BorderLayout.WEST);
+            txRow.add(vLbl, BorderLayout.EAST);
+            txCard.add(txRow);
+        }
+
+        JPanel txWrap = new JPanel(new BorderLayout());
+        txWrap.setBackground(BG_GRAY);
+        txWrap.setBorder(BorderFactory.createEmptyBorder(0, 16, 16, 16));
+        txWrap.add(txCard, BorderLayout.CENTER);
+        cc.gridy = 4; cc.insets = new Insets(0, 0, 0, 0);
+        content.add(txWrap, cc);
+
+        // filler
+        cc.gridy = 5; cc.weighty = 1.0; cc.fill = GridBagConstraints.BOTH;
+        content.add(Box.createGlue(), cc);
+
+        // ── Scroll wrapper ──
+        JScrollPane scroll = new JScrollPane(content);
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getViewport().setBackground(BG_GRAY);
+
+        JPanel outer = new JPanel(new BorderLayout());
+        outer.setName(panelName);
+        outer.setBackground(BG_GRAY);
+        outer.add(scroll, BorderLayout.CENTER);
+
+        mainPanel.add(outer, panelName);
+        cardLayout.show(mainPanel, panelName);
         outer.revalidate();
         outer.repaint();
     }
